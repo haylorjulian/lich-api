@@ -1,18 +1,7 @@
-import express, { Request, Response } from "express";
+import { Request, Response } from "express";
 import * as InstanceService from "../services/instance";
 import { BaseInstance, Instance } from "../interfaces/instance";
 
-/**
- * Router Definition
- */
-
-export const instancesRouter = express.Router();
-
-/**
- * Controller Definitions
- */
-
-// GET items
 export const getInstances = async (req: Request, res: Response) => {
   try {
     const instances: Instance[] = await InstanceService.findAll();
@@ -22,8 +11,6 @@ export const getInstances = async (req: Request, res: Response) => {
     res.status(500).send(e.message);
   }
 };
-
-// GET items/:id
 
 export const getInstance = async (req: Request, res: Response) => {
   const id: string = req.params.id;
@@ -41,8 +28,6 @@ export const getInstance = async (req: Request, res: Response) => {
   }
 };
 
-// POST items
-
 export const createInstance = async (req: Request, res: Response) => {
   try {
     console.log("BIDY", req.body);
@@ -56,8 +41,6 @@ export const createInstance = async (req: Request, res: Response) => {
     res.status(500).send(e.message);
   }
 };
-
-// PUT items/:id
 
 export const updateInstance = async (req: Request, res: Response) => {
   const id: string = req.params.id;
@@ -79,8 +62,6 @@ export const updateInstance = async (req: Request, res: Response) => {
     res.status(500).send(e.message);
   }
 };
-
-// DELETE items/:id
 
 export const deleteInstance = async (req: Request, res: Response) => {
   try {
