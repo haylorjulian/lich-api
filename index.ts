@@ -2,7 +2,7 @@ import * as dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
 
-import { app as appRouter } from "../routes/api";
+import { app as appRouter } from "./routes/api";
 
 dotenv.config();
 if (!process.env.PORT) {
