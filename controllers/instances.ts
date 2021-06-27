@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
 import * as InstanceService from "../services/instance";
-import { BaseInstance, Instance } from "../interfaces/instance";
+import { BaseInstanceI, InstanceI } from "../interfaces/instance";
 
 export const getInstances = async (req: Request, res: Response) => {
   try {
-    const instances: Instance[] = await InstanceService.findAll();
+    const instances: InstanceI[] = await InstanceService.findAll();
 
     res.status(200).send(instances);
   } catch (e) {
@@ -16,7 +16,7 @@ export const getInstance = async (req: Request, res: Response) => {
   const id: string = req.params.id;
 
   try {
-    const instance: Instance = await InstanceService.find(id);
+    const instance: InstanceI | null = await InstanceService.find(id);
 
     if (instance) {
       return res.status(200).send(instance);
@@ -30,9 +30,7 @@ export const getInstance = async (req: Request, res: Response) => {
 
 export const createInstance = async (req: Request, res: Response) => {
   try {
-    console.log("BIDY", req.body);
-
-    const instance: BaseInstance = req.body;
+    const instance: BaseInstanceI = req.body;
 
     const newInstance = await InstanceService.create(instance);
 
@@ -46,18 +44,9 @@ export const updateInstance = async (req: Request, res: Response) => {
   const id: string = req.params.id;
 
   try {
-    const itemUpdate: Instance = req.body;
-
-    const existingItem: Instance = await InstanceService.find(id);
-
-    if (existingItem) {
-      const updatedItem = await InstanceService.update(id, itemUpdate);
-      return res.status(200).json(updatedItem);
-    }
-
-    const newInstance = await InstanceService.create(itemUpdate);
-
-    res.status(201).json(newInstance);
+    const fieldsToUpdate: InstanceI = req.body;
+    const updatedItem = await InstanceService.update(id, fieldsToUpdate);
+    return res.status(200).json(updatedItem);
   } catch (e) {
     res.status(500).send(e.message);
   }

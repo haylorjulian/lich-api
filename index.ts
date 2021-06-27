@@ -1,10 +1,13 @@
 import * as dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
+import { connectToDB } from "./connections/mongodb";
 
 import { app as appRouter } from "./routes/api";
 
+connectToDB();
 dotenv.config();
+
 if (!process.env.PORT) {
   process.exit(1);
 }

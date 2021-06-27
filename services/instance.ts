@@ -1,56 +1,53 @@
-import { instances } from "./mockData";
-import { Instance, BaseInstance } from "../interfaces/instance";
+import { InstanceI, BaseInstanceI } from "../interfaces/instance";
+import { Instance } from "../models/InstanceModel";
 
-export const findAll = async (): Promise<Instance[]> =>
-  Object.values(instances);
+export const findAll = async (): Promise<InstanceI[]> => {
+  const instances = await Instance.find({});
+  return instances;
+};
 
-export const find = async (id: string): Promise<Instance> => instances[id];
+export const find = async (id: string): Promise<InstanceI | null> => {
+  const instance = await Instance.findOne({ _id: id });
+  return instance;
+};
 
 // Public
 export const create = async (
-  instance: Omit<BaseInstance, "targetId">
-): Promise<Instance> => {
-  const id = "4";
-
-  console.log(instance);
-
-  const newInstance = {
-    id,
+  instance: Omit<BaseInstanceI, "targetId">
+): Promise<InstanceI> => {
+  const newInstance = await Instance.create({
     ...instance,
     targetId: "-1",
-  };
+  });
 
-  // TODO: Override MongoDB entry
-  instances[id] = newInstance;
-
-  return instances[id];
+  return newInstance;
 };
 
 // Public
 export const update = async (
   id: string,
-  updatedInstance: Partial<BaseInstance>
-): Promise<Instance | null> => {
-  const instance = await find(id);
+  fieldsToUpdate: Partial<BaseInstanceI>
+): Promise<InstanceI | null> => {
+  const currentInstance = find(id);
+  const newInstance = { ...currentInstance, ...fieldsToUpdate };
+  const updatedInstance = await Instance.findOneAndUpdate(
+    { _id: id },
+    newInstance,
+    {
+      new: true,
+    }
+  );
 
-  if (!instance) {
+  if (!updatedInstance) {
     // TODO: Replace with error logger
     return null;
   }
 
-  // TODO: Override MongoDB entry
-  instances[id] = { ...instance, id, ...updatedInstance };
-
-  return instances[id];
+  return updatedInstance;
 };
 
 export const remove = async (id: string): Promise<null | void> => {
-  const instance = await find(id);
-
-  if (!instance) {
-    // TODO: Replace with error logger
-    return null;
-  }
-
-  delete instances[id];
+  Instance.deleteOne({ _id: id }, function (err) {
+    if (err) return err;
+  });
 };

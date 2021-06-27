@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
-import { Instance } from "../interfaces/instance";
+import { InstanceI } from "../interfaces/instance";
 
-type Instances = Record<string, Instance>;
+type Instances = Record<string, InstanceI>;
 
 export const instances: Instances = {
   "1": {
