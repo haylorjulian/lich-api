@@ -2,8 +2,9 @@ import * as dotenv from "dotenv";
 import mongoose from "mongoose";
 dotenv.config();
 
+const MONGODB_URL = process.env.MONGODB_URL;
+
 export function connectToDB() {
-  const MONGODB_URL = process.env.MONGODB_URL;
   mongoose.connect(MONGODB_URL!, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
