@@ -13,20 +13,14 @@ export const login = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
     if (!(email && password)) {
-      res.status(400).send("All input is required");
+      return res.status(400).send("All input is required");
     }
 
     const user = await UserService.find(email);
 
-    console.log(user);
-
-    const encryptedPassword = await bcrypt.hash(password, 10);
-
-    console.log(encryptedPassword);
+    // const encryptedPassword = await bcrypt.hash(password, 10);
 
     const auth = await bcrypt.compare(password, user!.password);
-
-    console.log(auth);
 
     if (user && auth) {
       const token = jwt.sign(
@@ -39,9 +33,9 @@ export const login = async (req: Request, res: Response) => {
 
       user.token = token;
 
-      res.status(200).json(user);
+      return res.status(200).json(user);
     }
-    res.status(400).send("Invalid Credentials");
+    return res.status(400).send("Invalid Credentials");
   } catch (err) {
     console.log(err);
   }
