@@ -20,9 +20,7 @@ export const login = async (req: Request, res: Response) => {
 
     // const encryptedPassword = await bcrypt.hash(password, 10);
 
-    const auth = await bcrypt.compare(password, user!.password);
-
-    if (user && auth) {
+    if (user && (await bcrypt.compare(password, user!.password))) {
       const token = jwt.sign(
         { user_id: user._id, email },
         TOKEN_KEY as Secret,
